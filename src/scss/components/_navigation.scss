@@ -1,0 +1,17 @@
+.nav-list {
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  list-style: none;
+
+  &__item {
+    margin-left: .5rem;
+    &:first-child {
+      margin-left: 0;
+    }
+  }
+
+  &--horizontal {
+    flex-direction: row;
+  }
+}
