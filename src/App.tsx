@@ -1,6 +1,6 @@
-import './App.css';
 import Header from "./components/Header";
 import AuthProvider from "./providers/AuthProvider";
+import "./scss/global/index.scss";
 
 function App() {
     return (

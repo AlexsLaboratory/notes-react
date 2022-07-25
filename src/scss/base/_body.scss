@@ -1,0 +1,5 @@
+@use "../utilities/variables";
+
+body {
+  background-color: variables.$primary-site-color
+}

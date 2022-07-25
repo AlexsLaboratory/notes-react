@@ -1,0 +1,26 @@
+.grid--modal {
+  grid-template-columns: 1fr;
+  grid-template-rows: repeat(2, min-content);
+  max-width: 50ch;
+
+  & > * {
+    margin: 0 0 0.5rem 0;
+  }
+}
+
+.modal {
+  &:not([open]) {
+    display: none;
+  }
+
+  &__title {
+    justify-self: center;
+    grid-column: 1;
+    grid-row: 1 / 2;
+  }
+
+  &__action {
+    grid-column: 1;
+    grid-row: 2 / 3;
+  }
+}

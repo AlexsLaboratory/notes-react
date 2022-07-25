@@ -1,0 +1,11 @@
+// colors
+$primary-site-color: #EDD685;
+$secondary-site-color: #1E2828;
+$primary-btn-color: #74A793;
+$secondary-btn-color: #987627;
+$light-gray-color: #C4C4C4;
+$view-btn-color: #CF8655;
+$delete-btn-color: #DC3545;
+
+//button variations
+$btn-variations: ("primary": ($primary-btn-color white), "secondary": ($secondary-btn-color white), "edit": ($secondary-btn-color white), "view": ($view-btn-color white), "delete": ($delete-btn-color white))

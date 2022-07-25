@@ -1,0 +1,63 @@
+@use "../utilities/variables";
+
+.button {
+  display: block;
+  height: min-content;
+  text-decoration: none;
+  font-weight: normal;
+  text-align: center;
+  color: white;
+  padding: .25rem .5rem;
+  background-color: gray;
+  border-radius: 5%;
+  border-style: none;
+  cursor: pointer;
+
+  &[type="button"] {
+    border: none;
+    cursor: pointer;
+    outline: none;
+  }
+
+  @each $key, $list in variables.$btn-variations {
+    @if $key == "view" or $key == "delete" or $key == "edit" {
+      &--#{$key} {
+        background-color: nth($list, 1);
+        color: nth($list, 2);
+        border-radius: initial;
+
+        &:hover {
+          background-color: darken(nth($list, 1), 10);
+        }
+      }
+
+      &--outline-#{$key} {
+        background-color: nth($list, 2);;
+        color: nth($list, 1);
+        border-radius: initial;
+
+        &:hover {
+          background-color: darken(nth($list, 2), 10);
+        }
+      }
+    } @else {
+      &--#{$key} {
+        background-color: nth($list, 1);
+        color: nth($list, 2);
+
+        &:hover {
+          background-color: darken(nth($list, 1), 10);
+        }
+      }
+
+      &--outline-#{$key} {
+        background-color: nth($list, 2);;
+        color: nth($list, 1);
+
+        &:hover {
+          background-color: darken(nth($list, 2), 10);
+        }
+      }
+    }
+  }
+}
