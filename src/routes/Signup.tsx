@@ -6,6 +6,7 @@ import "../scss/pages/_create_view_edit.scss";
 import Form from "../components/Form";
 import Button from '../components/Button';
 import {useInput, ErrorMessage} from "../hooks/useInput";
+import Input from "../components/Input";
 
 interface OwnProps {
 }
@@ -36,23 +37,10 @@ const Signup: FunctionComponent<Props> = (props) => {
                         reset();
                     }}>
                         <div className="form-fields">
-                            <div className="form-group">
-                                <label className="form-group__label" htmlFor="fname">First Name</label>
-                                <input className="form-group__input" type="text" name="fname" id="fname" />
-                            </div>
-                            <div className="form-group">
-                                <label className="form-group__label" htmlFor="lname">Last Name</label>
-                                <input className="form-group__input" type="text" name="lname" id="lname"/>
-                            </div>
-                            <div className="form-group">
-                                <label className="form-group__label" htmlFor="email">Email</label>
-                                <input className="form-group__input" type="email" name="email" id="email" value={emailValue} onChange={valueChangeHandler} onBlur={inputBlurHandler}/>
-                                {hasError && <span className="form-group__error">{errorMessage}</span>}
-                            </div>
-                            <div className="form-group">
-                                <label className="form-group__label" htmlFor="password">Password</label>
-                                <input className="form-group__input" type="password" name="password" id="password"/>
-                            </div>
+                            <Input label="First Name" name="fname" type="text" />
+                            <Input label="Last Name" name="lname" type="text" />
+                            <Input label="Email" name="email" type="email" value={emailValue} onChange={valueChangeHandler} onBlur={inputBlurHandler} hasError={hasError} errorMessage={errorMessage} />
+                            <Input label="Password" name="current-password" type="password" />
                         </div>
                         <Button type="submit"
                                 className="button button--primary button--nav site-form__action-btn site-form__action-btn--save form__button" styleType="primary">
