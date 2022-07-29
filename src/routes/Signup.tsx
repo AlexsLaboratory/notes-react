@@ -32,7 +32,8 @@ const Signup: FunctionComponent<Props> = (props) => {
                 <div className="site-form__content site-form__content--create-edit">
                     <Form className="form" onSubmit={(e) => {
                         e.preventDefault();
-                        console.log(e)
+                        console.log(e);
+                        reset();
                     }}>
                         <div className="form-fields">
                             <div className="form-group">
@@ -46,7 +47,7 @@ const Signup: FunctionComponent<Props> = (props) => {
                             <div className="form-group">
                                 <label className="form-group__label" htmlFor="email">Email</label>
                                 <input className="form-group__input" type="email" name="email" id="email" value={emailValue} onChange={valueChangeHandler} onBlur={inputBlurHandler}/>
-                                {hasError && <p className="form-group__error">{errorMessage}</p>}
+                                {hasError && <span className="form-group__error">{errorMessage}</span>}
                             </div>
                             <div className="form-group">
                                 <label className="form-group__label" htmlFor="password">Password</label>
