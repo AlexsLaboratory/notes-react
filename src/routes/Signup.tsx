@@ -32,6 +32,56 @@ const Signup: FunctionComponent<Props> = (props) => {
         return [true, ""]
     }, {onEmpty: "Email is required", onInvalid: "Email is invalid"});
 
+    const {
+        value: firstNameValue,
+        isValid: firstNameValid,
+        errorMessage: firstNameErrorMessage,
+        hasError: firstNameHasError,
+        valueChangeHandler: firstNameChangeHandler,
+        inputBlurHandler: firstNameInputBlurHandler,
+        reset: firstNameReset
+    } = useInput((value: string, errorMessage: ErrorMessage) => {
+        if (value.length === 0) {
+            return [false, errorMessage.onEmpty]
+        }
+        return [true, ""]
+    }, {onEmpty: "First name is required", onInvalid: ""});
+    const {
+        value: lastNameValue,
+        isValid: lastNameValid,
+        errorMessage: lastNameErrorMessage,
+        hasError: lastNameHasError,
+        valueChangeHandler: lastNameChangeHandler,
+        inputBlurHandler: lastNameInputBlurHandler,
+        reset: lastNameReset
+    } = useInput((value: string, errorMessage: ErrorMessage) => {
+        if (value.length === 0) {
+            return [false, errorMessage.onEmpty]
+        }
+        return [true, ""]
+    }, {onEmpty: "Last name is required", onInvalid: ""});
+    const {
+        value: passwordValue,
+        isValid: passwordValid,
+        errorMessage: passwordErrorMessage,
+        hasError: passwordHasError,
+        valueChangeHandler: passwordChangeHandler,
+        inputBlurHandler: passwordInputBlurHandler,
+        reset: passwordReset
+    } = useInput((value: string, errorMessage: ErrorMessage) => {
+        if (value.length === 0) {
+            return [false, errorMessage.onEmpty]
+        }
+        const pattern = /^(?=.*\d)(?=.*[A-Z])(?=.*[a-z])(?=.*[!"#$%&"()\*+,\-\./:;<=>?@\[\\\]\^_`{|}~])(?!.*\s).{8,32}$/
+        if (!pattern.test(value)) {
+            return [false, errorMessage.onInvalid]
+        }
+        return [true, ""]
+    }, {
+        onEmpty: "Password is required",
+        onInvalid: ["At least one number.", "At lest one lower case letter", "At lest one upper case letter", "At lest one special character", "At least one special character", "Must be 8 to 32 characters long"]
+    });
+
     return (
         <AuthProvider>
             <Header/>
@@ -42,10 +92,25 @@ const Signup: FunctionComponent<Props> = (props) => {
                         e.preventDefault();
                         console.log(e);
                         emailReset();
+                        firstNameReset();
                     }}>
                         <div className={`${formStyles["form-fields"]}`}>
-                            <Input label="First Name" name="fname" type="text"/>
-                            <Input label="Last Name" name="lname" type="text"/>
+                            <Input label="First Name"
+                                   name="fname"
+                                   type="text"
+                                   value={firstNameValue}
+                                   onChange={firstNameChangeHandler}
+                                   onBlur={firstNameInputBlurHandler}
+                                   hasError={firstNameHasError}
+                                   errorMessage={firstNameErrorMessage}/>
+                            <Input label="Last Name"
+                                   name="lname"
+                                   type="text"
+                                   value={lastNameValue}
+                                   onChange={lastNameChangeHandler}
+                                   onBlur={lastNameInputBlurHandler}
+                                   hasError={lastNameHasError}
+                                   errorMessage={lastNameErrorMessage}/>
                             <Input label="Email"
                                    name="email"
                                    type="email"
@@ -54,7 +119,14 @@ const Signup: FunctionComponent<Props> = (props) => {
                                    onBlur={emailInputBlurHandler}
                                    hasError={emailHasError}
                                    errorMessage={emailErrorMessage}/>
-                            <Input label="Password" name="current-password" type="password"/>
+                            <Input label="Password"
+                                   name="current-password"
+                                   type="password"
+                                   value={passwordValue}
+                                   onChange={passwordChangeHandler}
+                                   onBlur={passwordInputBlurHandler}
+                                   hasError={passwordHasError}
+                                   errorMessage={passwordErrorMessage}/>
                         </div>
                         <Button type="submit"
                                 className={`${formStyles["site-form__action-btn"]} ${formStyles["site-form__action-btn--save"]} ${formStyles.form__button}`}

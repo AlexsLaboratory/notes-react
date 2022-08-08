@@ -2,7 +2,7 @@ import {useState} from 'react';
 
 export interface ErrorMessage {
     onEmpty: string;
-    onInvalid: string;
+    onInvalid: string | Array<string>;
 }
 
 export const useInput = (validateValue: Function, errorMessage: ErrorMessage) => {
