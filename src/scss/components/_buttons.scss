@@ -13,6 +13,11 @@
   border-style: none;
   cursor: pointer;
 
+  &:disabled {
+    cursor: not-allowed;
+    opacity: .5;
+  }
+
   &[type="button"] {
     border: none;
     cursor: pointer;

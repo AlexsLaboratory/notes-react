@@ -5,6 +5,7 @@ interface OwnProps {
     type: "button" | "submit" | "reset";
     styleType: string;
     className?: string;
+    disabled?: undefined | boolean;
     children: React.ReactNode;
 }
 
@@ -32,7 +33,7 @@ const Button: FunctionComponent<Props> = (props) => {
 
   return (
       <>
-        <button type={props.type} className={`${styles.button} ${styles[buttonStyle]} ${props.className}`}>{props.children}</button>
+        <button type={props.type} className={`${styles.button} ${styles[buttonStyle]} ${props.className}`} disabled={props.disabled}>{props.children}</button>
       </>
   );
 };

@@ -79,8 +79,18 @@ const Signup: FunctionComponent<Props> = (props) => {
         return [true, ""]
     }, {
         onEmpty: "Password is required",
-        onInvalid: ["At least one number.", "At lest one lower case letter", "At lest one upper case letter", "At lest one special character", "At least one special character", "Must be 8 to 32 characters long"]
+        onInvalid: ["At least one number", "At lest one lower case letter", "At lest one upper case letter", "At lest one special character", "At least one special character", "Must be 8 to 32 characters long"]
     });
+
+    const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        firstNameReset();
+        lastNameReset();
+        emailReset();
+        passwordReset();
+    }
+
+    const formValid = !firstNameValid || !lastNameValid || !emailValid || !passwordValid;
 
     return (
         <AuthProvider>
@@ -88,12 +98,7 @@ const Signup: FunctionComponent<Props> = (props) => {
             <div className={`grid ${formStyles["grid--site-form"]} ${formStyles["site-form"]}`}>
                 <h1 className={`${formStyles["site-form__title"]}`}>Signup</h1>
                 <div className={`${formStyles["site-form__content"]} ${formStyles["site-form__content--create-edit"]}`}>
-                    <Form onSubmit={(e) => {
-                        e.preventDefault();
-                        console.log(e);
-                        emailReset();
-                        firstNameReset();
-                    }}>
+                    <Form onSubmit={onSubmitHandler}>
                         <div className={`${formStyles["form-fields"]}`}>
                             <Input label="First Name"
                                    name="fname"
@@ -130,8 +135,8 @@ const Signup: FunctionComponent<Props> = (props) => {
                         </div>
                         <Button type="submit"
                                 className={`${formStyles["site-form__action-btn"]} ${formStyles["site-form__action-btn--save"]} ${formStyles.form__button}`}
-                                styleType="primary">
-                            Create
+                                styleType="primary" disabled={formValid}>
+                            Signup
                         </Button>
                     </Form>
                 </div>
