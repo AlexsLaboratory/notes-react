@@ -4,7 +4,9 @@ import {
     BrowserRouter,
     Route, Routes
 } from "react-router-dom";
-import App from './App';
+import App from './routes/App';
+import Signup from "./routes/Signup";
+import "./scss/global/index.scss";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -13,6 +15,7 @@ root.render(
   <BrowserRouter>
     <Routes>
       <Route path="/" element={<App />} />
+      <Route path="/signup" element={<Signup />} />
     </Routes>
   </BrowserRouter>
 );
