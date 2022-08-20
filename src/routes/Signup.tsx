@@ -6,6 +6,7 @@ import Button from '../components/Button';
 import {useInput, ErrorMessage} from "../hooks/useInput";
 import Input from "../components/Input";
 import formStyles from '../scss/modules/form.module.scss';
+import {createUser} from "../services/User";
 
 interface OwnProps {
 }
@@ -84,6 +85,17 @@ const Signup: FunctionComponent<Props> = (props) => {
 
     const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        createUser({
+            email: emailValue,
+            firstName: firstNameValue,
+            lastName: lastNameValue,
+            password: passwordValue
+        }).then(r => {
+            console.log(r);
+        }).catch(e => {
+            console.log(e);
+        });
+
         firstNameReset();
         lastNameReset();
         emailReset();

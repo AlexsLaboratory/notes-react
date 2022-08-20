@@ -15,7 +15,6 @@ interface OwnProps {
 type Props = OwnProps;
 
 const Input: FunctionComponent<Props> = (props) => {
-    console.log(props.errorMessage);
     const errorIsArray = Array.isArray(props.errorMessage);
     let errorList = null;
     if (errorIsArray && props.errorMessage !== undefined && typeof props.errorMessage !== "string") {
