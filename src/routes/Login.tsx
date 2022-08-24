@@ -1,4 +1,4 @@
-import React, {FunctionComponent} from 'react';
+import React, {FunctionComponent, useState} from 'react';
 import AuthProvider from "../providers/AuthProvider";
 import Header from "../components/Header";
 import formStyles from "../scss/modules/form.module.scss";
@@ -13,6 +13,7 @@ interface OwnProps {
 type Props = OwnProps;
 
 const Login: FunctionComponent<Props> = (props) => {
+    const [alert, setAlert] = useState<AlertProps>({message: "", type: "success"});
     const {
         value: emailValue,
         isValid: emailValid,
@@ -56,15 +57,18 @@ const Login: FunctionComponent<Props> = (props) => {
 
     const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setAlert({message: "Sorry something happened on our end.", type: "success"});
         console.log("Form submitted");
         emailReset();
         passwordReset();
     }
 
-    const formValid = !emailValid || !passwordValid;
 
     return (
         <AuthProvider>
+            {alert.message !== "" && <Alert alert={alert} onClose={() => {
+                setAlert({message: "", type: "success"});
+            }}/>}
             <Header/>
             <div className={`grid ${formStyles["grid--site-form"]} ${formStyles["site-form"]}`}>
                 <h1 className={`${formStyles["site-form__title"]}`}>Login</h1>
@@ -74,23 +78,15 @@ const Login: FunctionComponent<Props> = (props) => {
                             <Input label="Email"
                                    name="email"
                                    type="email"
-                                   value={emailValue}
-                                   onChange={emailChangeHandler}
-                                   onBlur={emailInputBlurHandler}
-                                   hasError={emailHasError}
-                                   errorMessage={emailErrorMessage}/>
+                            />
                             <Input label="Password"
                                    name="current-password"
                                    type="password"
-                                   value={passwordValue}
-                                   onChange={passwordChangeHandler}
-                                   onBlur={passwordInputBlurHandler}
-                                   hasError={passwordHasError}
-                                   errorMessage={passwordErrorMessage}/>
+                            />
                         </div>
                         <Button type="submit"
                                 className={`${formStyles["site-form__action-btn"]} ${formStyles["site-form__action-btn--save"]} ${formStyles.form__button}`}
-                                styleType="primary" disabled={formValid}>
+                                styleType="primary">
                             Login
                         </Button>
                     </Form>
