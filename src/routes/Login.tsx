@@ -1,4 +1,4 @@
-import React, {FunctionComponent, useState} from 'react';
+import React, {FunctionComponent, useContext, useEffect, useState} from 'react';
 import AuthProvider from "../providers/AuthProvider";
 import Header from "../components/Header";
 import formStyles from "../scss/modules/form.module.scss";
@@ -6,6 +6,9 @@ import Form from "../components/Form";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import {ErrorMessage, useInput} from "../hooks/useInput";
+import Alert from "../components/Alert";
+import {useNavigate} from "react-router-dom";
+import {useAlert, useAlertSet} from "../context/AlertContext";
 
 interface OwnProps {
 }
@@ -13,7 +16,10 @@ interface OwnProps {
 type Props = OwnProps;
 
 const Login: FunctionComponent<Props> = (props) => {
-    const [alert, setAlert] = useState<AlertProps>({message: "", type: "success"});
+    const alert = useAlert();
+    const alertSet = useAlertSet();
+    const navigate = useNavigate();
+
     const {
         value: emailValue,
         isValid: emailValid,
@@ -55,10 +61,19 @@ const Login: FunctionComponent<Props> = (props) => {
         onInvalid: ["At least one number", "At lest one lower case letter", "At lest one upper case letter", "At lest one special character", "At least one special character", "Must be 8 to 32 characters long"]
     });
 
+    useEffect(() => {
+        if (alert.type === "success" && alert.message.length > 0) {
+            navigate("/", {
+                replace: true,
+                state: alert
+            });
+        }
+    }, [alert]);
+
     const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setAlert({message: "Sorry something happened on our end.", type: "success"});
         console.log("Form submitted");
+        alertSet({message: "Sorry something happened on our end.", type: "success"});
         emailReset();
         passwordReset();
     }
@@ -66,8 +81,8 @@ const Login: FunctionComponent<Props> = (props) => {
 
     return (
         <AuthProvider>
-            {alert.message !== "" && <Alert alert={alert} onClose={() => {
-                setAlert({message: "", type: "success"});
+            {alert.message !== "" && <Alert message={alert.message} type={alert.type} onClose={() => {
+                alertSet({message: "", type: "success"});
             }}/>}
             <Header/>
             <div className={`grid ${formStyles["grid--site-form"]} ${formStyles["site-form"]}`}>
