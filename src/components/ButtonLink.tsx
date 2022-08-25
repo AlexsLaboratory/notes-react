@@ -1,5 +1,6 @@
-import React, { FunctionComponent } from 'react';
+import React, {FunctionComponent} from 'react';
 import styles from "../scss/modules/button.module.scss";
+import {Link} from "react-router-dom";
 
 interface OwnProps {
     href: string;
@@ -30,11 +31,12 @@ const ButtonLink: FunctionComponent<Props> = (props) => {
             break;
     }
 
-  return (
-      <>
-        <a href={props.href} className={`${styles.button} ${styles[buttonStyle]} ${props.className}`}>{props.label}</a>
-      </>
-  );
+    return (
+        <>
+            <Link to={props.href}
+                  className={`${styles.button} ${styles[buttonStyle]} ${props.className}`}>{props.label}</Link>
+        </>
+    );
 };
 
 export default ButtonLink;
