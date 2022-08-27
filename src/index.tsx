@@ -10,6 +10,7 @@ import "./scss/global/index.scss";
 import Login from "./routes/Login";
 import {AlertProvider} from "./context/AlertContext";
 import {AuthProvider} from "./context/AuthContext";
+import New from "./routes/New";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -22,6 +23,7 @@ root.render(
                     <Route path="/" element={<App/>}/>
                     <Route path="/signup" element={<Signup/>}/>
                     <Route path="/login" element={<Login/>}/>
+                    <Route path="/new" element={<New/>}/>
                 </Routes>
             </AuthProvider>
         </AlertProvider>
