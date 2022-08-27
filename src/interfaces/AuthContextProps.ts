@@ -1,6 +1,6 @@
 interface AuthContextProps {
     isAuthenticated: boolean;
-    authToken: string | null;
+    accessToken: string | null;
     refreshToken: string | null;
 }
 

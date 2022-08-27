@@ -1,18 +1,28 @@
-import React, {FunctionComponent} from 'react';
+import React, {FunctionComponent, useEffect} from 'react';
 import Header from "../components/Header";
+import formStyles from "../scss/modules/form.module.scss";
 import Form from "../components/Form";
-import Button from '../components/Button';
-import {useInput, ErrorMessage} from "../hooks/useInput";
 import Input from "../components/Input";
-import formStyles from '../scss/modules/form.module.scss';
-import {createUser} from "../services/User";
+import Button from "../components/Button";
+import {ErrorMessage, useInput} from "../hooks/useInput";
+import Alert from "../components/Alert";
+import {useNavigate} from "react-router-dom";
+import {useAlert, useAlertSet} from "../context/AlertContext";
+import {useAuth, useAuthSet} from "../context/AuthContext";
+import {loginUser} from "../services/User";
 
 interface OwnProps {
 }
 
 type Props = OwnProps;
 
-const Signup: FunctionComponent<Props> = (props) => {
+const Login: FunctionComponent<Props> = (props) => {
+    const alert = useAlert();
+    const alertSet = useAlertSet();
+    const auth = useAuth();
+    const authSet = useAuthSet();
+    const navigate = useNavigate();
+
     const {
         value: emailValue,
         isValid: emailValid,
@@ -32,34 +42,6 @@ const Signup: FunctionComponent<Props> = (props) => {
         return [true, ""]
     }, {onEmpty: "Email is required", onInvalid: "Email is invalid"});
 
-    const {
-        value: firstNameValue,
-        isValid: firstNameValid,
-        errorMessage: firstNameErrorMessage,
-        hasError: firstNameHasError,
-        valueChangeHandler: firstNameChangeHandler,
-        inputBlurHandler: firstNameInputBlurHandler,
-        reset: firstNameReset
-    } = useInput((value: string, errorMessage: ErrorMessage) => {
-        if (value.length === 0) {
-            return [false, errorMessage.onEmpty]
-        }
-        return [true, ""]
-    }, {onEmpty: "First name is required", onInvalid: ""});
-    const {
-        value: lastNameValue,
-        isValid: lastNameValid,
-        errorMessage: lastNameErrorMessage,
-        hasError: lastNameHasError,
-        valueChangeHandler: lastNameChangeHandler,
-        inputBlurHandler: lastNameInputBlurHandler,
-        reset: lastNameReset
-    } = useInput((value: string, errorMessage: ErrorMessage) => {
-        if (value.length === 0) {
-            return [false, errorMessage.onEmpty]
-        }
-        return [true, ""]
-    }, {onEmpty: "Last name is required", onInvalid: ""});
     const {
         value: passwordValue,
         isValid: passwordValid,
@@ -82,77 +64,81 @@ const Signup: FunctionComponent<Props> = (props) => {
         onInvalid: ["At least one number", "At lest one lower case letter", "At lest one upper case letter", "At lest one special character", "At least one special character", "Must be 8 to 32 characters long"]
     });
 
+    useEffect(() => {
+        if (alert.type === "success" && alert.message.length > 0) {
+            navigate("/", {
+                replace: true,
+                state: alert
+            });
+        }
+    }, [alert]);
+
     const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        createUser({
+        loginUser({
             email: emailValue,
-            firstName: firstNameValue,
-            lastName: lastNameValue,
             password: passwordValue
-        }).then(r => {
-            console.log(r);
-        }).catch(e => {
-            console.log(e);
+        }).then((response) => response.json().then(res => ({status: response.status, ...res})))
+            .then((apiResponse) => {
+                if (apiResponse.status === 200) {
+                    authSet({
+                        isAuthenticated: true,
+                        accessToken: apiResponse.accessToken,
+                        refreshToken: apiResponse.refreshToken,
+                    });
+                } else {
+                    authSet({
+                        isAuthenticated: false,
+                        accessToken: null,
+                        refreshToken: null,
+                    });
+                }
+            }).catch((error) => {
+            console.error('Error:', error);
         });
-
-        firstNameReset();
-        lastNameReset();
+        // alertSet({message: "Sorry something happened on our end.", type: "success"});
         emailReset();
         passwordReset();
     }
 
-    const formValid = !firstNameValid || !lastNameValid || !emailValid || !passwordValid;
 
     return (
         <>
+            {alert.message !== "" && <Alert message={alert.message} type={alert.type} onClose={() => {
+                alertSet({message: "", type: "success"});
+            }}/>}
             <Header/>
             <div className={`grid ${formStyles["grid--site-form"]} ${formStyles["site-form"]}`}>
-                <h1 className={`${formStyles["site-form__title"]}`}>Signup</h1>
+                <h1 className={`${formStyles["site-form__title"]}`}>Login</h1>
                 <div className={`${formStyles["site-form__content"]} ${formStyles["site-form__content--create-edit"]}`}>
                     <Form onSubmit={onSubmitHandler}>
                         <div className={`${formStyles["form-fields"]}`}>
-                            <Input label="First Name"
-                                   name="fname"
-                                   type="text"
-                                   value={firstNameValue}
-                                   onChange={firstNameChangeHandler}
-                                   onBlur={firstNameInputBlurHandler}
-                                   hasError={firstNameHasError}
-                                   errorMessage={firstNameErrorMessage}/>
-                            <Input label="Last Name"
-                                   name="lname"
-                                   type="text"
-                                   value={lastNameValue}
-                                   onChange={lastNameChangeHandler}
-                                   onBlur={lastNameInputBlurHandler}
-                                   hasError={lastNameHasError}
-                                   errorMessage={lastNameErrorMessage}/>
                             <Input label="Email"
                                    name="email"
                                    type="email"
                                    value={emailValue}
                                    onChange={emailChangeHandler}
                                    onBlur={emailInputBlurHandler}
-                                   hasError={emailHasError}
-                                   errorMessage={emailErrorMessage}/>
+                            />
                             <Input label="Password"
                                    name="current-password"
                                    type="password"
                                    value={passwordValue}
                                    onChange={passwordChangeHandler}
                                    onBlur={passwordInputBlurHandler}
-                                   hasError={passwordHasError}
-                                   errorMessage={passwordErrorMessage}/>
+                            />
                         </div>
                         <Button type="submit"
                                 className={`${formStyles["site-form__action-btn"]} ${formStyles["site-form__action-btn--save"]} ${formStyles.form__button}`}
-                                styleType="primary" disabled={formValid}>
-                            Signup
+                                styleType="primary">
+                            Login
                         </Button>
                     </Form>
                 </div>
             </div>
         </>
     );
+
 };
-export default Signup;
+
+export default Login;
