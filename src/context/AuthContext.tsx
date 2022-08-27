@@ -1,13 +1,22 @@
 import React, {createContext, FunctionComponent, ReactNode, useContext, useState} from 'react';
 import AuthContextProps from "../interfaces/AuthContextProps";
 
-const defaultValue = localStorage.getItem("user") || {
+// const defaultValue = localStorage.getItem("user") || {
+//     isAuthenticated: false,
+//     accessToken: null,
+//     refreshToken: null
+// }
+let defaultValue = localStorage.getItem("user");
+let defaultValueJsonObject = {
     isAuthenticated: false,
     accessToken: null,
     refreshToken: null
+} as AuthContextProps;
+if (defaultValue) {
+    defaultValueJsonObject = JSON.parse(defaultValue);
 }
 
-const AuthContext = createContext<AuthContextProps>(defaultValue as AuthContextProps);
+const AuthContext = createContext<AuthContextProps>(defaultValueJsonObject as AuthContextProps);
 
 const useAuthSet = () => {
     return useContext(AuthSetContext);
@@ -26,7 +35,7 @@ const useAuth = () => {
 }
 
 const AuthProvider: FunctionComponent<Props> = (props) => {
-    const [auth, setAuth] = useState<AuthContextProps>(defaultValue as AuthContextProps);
+    const [auth, setAuth] = useState<AuthContextProps>(defaultValueJsonObject as AuthContextProps);
 
     const createAuth = (auth: AuthContextProps) => {
         localStorage.setItem("user", JSON.stringify(auth));
