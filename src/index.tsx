@@ -9,6 +9,7 @@ import Signup from "./routes/Signup";
 import "./scss/global/index.scss";
 import Login from "./routes/Login";
 import {AlertProvider} from "./context/AlertContext";
+import {AuthProvider} from "./context/AuthContext";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -16,11 +17,13 @@ const root = ReactDOM.createRoot(
 root.render(
     <BrowserRouter>
         <AlertProvider>
-            <Routes>
-                <Route path="/" element={<App/>}/>
-                <Route path="/signup" element={<Signup/>}/>
-                <Route path="/login" element={<Login/>}/>
-            </Routes>
+            <AuthProvider>
+                <Routes>
+                    <Route path="/" element={<App/>}/>
+                    <Route path="/signup" element={<Signup/>}/>
+                    <Route path="/login" element={<Login/>}/>
+                </Routes>
+            </AuthProvider>
         </AlertProvider>
     </BrowserRouter>
 );

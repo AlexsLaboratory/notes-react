@@ -1,7 +1,4 @@
 import React, {FunctionComponent, useContext} from 'react';
-import AuthContext from "../context/auth-context";
-import useLocalStorage from "../hooks/useLocalStorage";
-import AuthContextProps from "../interfaces/AuthContextProps";
 import ButtonLink from "./ButtonLink";
 import headerStyles from "../scss/modules/header.module.scss";
 import modalStyles from "../scss/modules/modal.module.scss";
@@ -12,9 +9,6 @@ interface OwnProps {
 type Props = OwnProps;
 
 const Header: FunctionComponent<Props> = (props) => {
-    let ctx = useContext(AuthContext);
-    const [user, setUser] = useLocalStorage<AuthContextProps>("user", ctx);
-
     return (
         <>
             <dialog className={`grid ${modalStyles["grid--modal"]} ${modalStyles.modal}`} id="delete-modal">

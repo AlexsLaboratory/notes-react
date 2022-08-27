@@ -1,5 +1,4 @@
-import React, {FunctionComponent, useContext, useEffect, useState} from 'react';
-import AuthProvider from "../providers/AuthProvider";
+import React, {FunctionComponent, useEffect} from 'react';
 import Header from "../components/Header";
 import formStyles from "../scss/modules/form.module.scss";
 import Form from "../components/Form";
@@ -9,6 +8,8 @@ import {ErrorMessage, useInput} from "../hooks/useInput";
 import Alert from "../components/Alert";
 import {useNavigate} from "react-router-dom";
 import {useAlert, useAlertSet} from "../context/AlertContext";
+import {useAuth, useAuthSet} from "../context/AuthContext";
+import {loginUser} from "../services/User";
 
 interface OwnProps {
 }
@@ -18,6 +19,8 @@ type Props = OwnProps;
 const Login: FunctionComponent<Props> = (props) => {
     const alert = useAlert();
     const alertSet = useAlertSet();
+    const auth = useAuth();
+    const authSet = useAuthSet();
     const navigate = useNavigate();
 
     const {
@@ -72,15 +75,35 @@ const Login: FunctionComponent<Props> = (props) => {
 
     const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log("Form submitted");
-        alertSet({message: "Sorry something happened on our end.", type: "success"});
+        loginUser({
+            email: emailValue,
+            password: passwordValue
+        }).then((response) => response.json().then(res => ({status: response.status, ...res})))
+            .then((apiResponse) => {
+                if (apiResponse.status === 200) {
+                    authSet({
+                        isAuthenticated: true,
+                        accessToken: apiResponse.accessToken,
+                        refreshToken: apiResponse.refreshToken,
+                    });
+                } else {
+                    authSet({
+                        isAuthenticated: false,
+                        accessToken: null,
+                        refreshToken: null,
+                    });
+                }
+            }).catch((error) => {
+            console.error('Error:', error);
+        });
+        // alertSet({message: "Sorry something happened on our end.", type: "success"});
         emailReset();
         passwordReset();
     }
 
 
     return (
-        <AuthProvider>
+        <>
             {alert.message !== "" && <Alert message={alert.message} type={alert.type} onClose={() => {
                 alertSet({message: "", type: "success"});
             }}/>}
@@ -93,10 +116,16 @@ const Login: FunctionComponent<Props> = (props) => {
                             <Input label="Email"
                                    name="email"
                                    type="email"
+                                   value={emailValue}
+                                   onChange={emailChangeHandler}
+                                   onBlur={emailInputBlurHandler}
                             />
                             <Input label="Password"
                                    name="current-password"
                                    type="password"
+                                   value={passwordValue}
+                                   onChange={passwordChangeHandler}
+                                   onBlur={passwordInputBlurHandler}
                             />
                         </div>
                         <Button type="submit"
@@ -107,7 +136,7 @@ const Login: FunctionComponent<Props> = (props) => {
                     </Form>
                 </div>
             </div>
-        </AuthProvider>
+        </>
     );
 
 };

@@ -1,5 +1,4 @@
 import React, {FunctionComponent} from 'react';
-import AuthProvider from "../providers/AuthProvider";
 import Header from "../components/Header";
 import Form from "../components/Form";
 import Button from '../components/Button';
@@ -105,7 +104,7 @@ const Signup: FunctionComponent<Props> = (props) => {
     const formValid = !firstNameValid || !lastNameValid || !emailValid || !passwordValid;
 
     return (
-        <AuthProvider>
+        <>
             <Header/>
             <div className={`grid ${formStyles["grid--site-form"]} ${formStyles["site-form"]}`}>
                 <h1 className={`${formStyles["site-form__title"]}`}>Signup</h1>
@@ -153,7 +152,7 @@ const Signup: FunctionComponent<Props> = (props) => {
                     </Form>
                 </div>
             </div>
-        </AuthProvider>
+        </>
     );
 };
 export default Signup;
