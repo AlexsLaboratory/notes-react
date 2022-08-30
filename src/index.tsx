@@ -11,6 +11,7 @@ import Login from "./routes/Login";
 import {AlertProvider} from "./context/AlertContext";
 import {AuthProvider} from "./context/AuthContext";
 import New from "./routes/New";
+import RequireAuth from "./components/RequireAuth";
 
 const root = ReactDOM.createRoot(
     document.getElementById('root') as HTMLElement
@@ -23,7 +24,7 @@ root.render(
                     <Route path="/" element={<App/>}/>
                     <Route path="/signup" element={<Signup/>}/>
                     <Route path="/login" element={<Login/>}/>
-                    <Route path="/new" element={<New/>}/>
+                    <Route path="/new" element={<RequireAuth message="Login is required before creating a new note."><New/></RequireAuth>}/>
                 </Routes>
             </AuthProvider>
         </AlertProvider>
