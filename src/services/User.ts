@@ -1,33 +1,8 @@
-interface UserSignup {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-}
-
-interface UserLogin {
-    email: string;
-    password: string;
-}
-
-interface Error {
-    firstName?: string;
-    lastName?: string;
-    email?: string;
-    password?: string;
-}
-
-interface UserResponse {
-    isOperational: boolean;
-    message: string;
-    errors?: Error;
-    data: null | UserSignup;
-    stack?: string;
-}
+import {FetchResponse, UserSignup} from "../../types";
 
 const BASE_URL = 'http://dev.lowe.lan';
 
-export async function createUser(user: UserSignup): Promise<UserResponse> {
+export async function createUser(user: UserSignup): Promise<FetchResponse> {
     const response = await fetch(`${BASE_URL}/auth/signup`, {
         method: 'POST',
         headers: {
@@ -35,15 +10,6 @@ export async function createUser(user: UserSignup): Promise<UserResponse> {
         },
         body: JSON.stringify(user)
     });
-    return response.json();
-}
-
-export async function loginUser(user: UserLogin): Promise<Response> {
-    return await fetch(`${BASE_URL}/auth/login`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(user)
-    });
+    const data = await response.json();
+    return {response, data};
 }

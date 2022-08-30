@@ -1,12 +1,13 @@
-import React, {FunctionComponent} from 'react';
+import React, {FunctionComponent, MouseEventHandler} from 'react';
 import styles from "../scss/modules/button.module.scss";
 import {Link} from "react-router-dom";
 
 interface OwnProps {
-    href: string;
+    href?: string;
     label: string;
     styleType: string;
     className?: string;
+    onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
 type Props = OwnProps;
@@ -33,8 +34,13 @@ const ButtonLink: FunctionComponent<Props> = (props) => {
 
     return (
         <>
-            <Link to={props.href}
-                  className={`${styles.button} ${styles[buttonStyle]} ${props.className}`}>{props.label}</Link>
+            {
+                props.onClick ? (<button type="button"
+                                         className={`${styles.button} ${styles[buttonStyle]} ${props.className}`} onClick={props.onClick}>{props.label}</button>) : (
+                    <Link to={props.href || "#"}
+                          className={`${styles.button} ${styles[buttonStyle]} ${props.className}`}>{props.label}</Link>
+                )
+            }
         </>
     );
 };

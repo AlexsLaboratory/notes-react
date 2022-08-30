@@ -1,8 +1,7 @@
-import React, {FunctionComponent, useContext} from 'react';
+import React, {FunctionComponent} from 'react';
 import styles from '../scss/modules/alert.module.scss';
 import {faXmark} from '@fortawesome/free-solid-svg-icons'
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
-import {useAlert, useAlertSet} from "../context/AlertContext";
 
 interface OwnProps {
     onClose: () => void;

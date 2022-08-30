@@ -1,15 +1,14 @@
-import React, {FunctionComponent, useEffect} from 'react';
+import React, {FunctionComponent} from 'react';
 import Header from "../components/Header";
 import formStyles from "../scss/modules/form.module.scss";
 import Form from "../components/Form";
 import Input from "../components/Input";
 import Button from "../components/Button";
 import {ErrorMessage, useInput} from "../hooks/useInput";
-import Alert from "../components/Alert";
 import {useNavigate} from "react-router-dom";
-import {useAlert, useAlertSet} from "../context/AlertContext";
-import {useAuth, useAuthSet} from "../context/AuthContext";
-import {loginUser} from "../services/User";
+import {useAuthSet} from "../context/AuthContext";
+import useFetch from "../hooks/useFetch";
+import {useLocation} from "react-router";
 
 interface OwnProps {
 }
@@ -17,11 +16,10 @@ interface OwnProps {
 type Props = OwnProps;
 
 const Login: FunctionComponent<Props> = (props) => {
-    const alert = useAlert();
-    const alertSet = useAlertSet();
-    const auth = useAuth();
     const authSet = useAuthSet();
     const navigate = useNavigate();
+    const location = useLocation();
+    const api = useFetch();
 
     const {
         value: emailValue,
@@ -64,49 +62,39 @@ const Login: FunctionComponent<Props> = (props) => {
         onInvalid: ["At least one number", "At lest one lower case letter", "At lest one upper case letter", "At lest one special character", "At least one special character", "Must be 8 to 32 characters long"]
     });
 
-    useEffect(() => {
-        if (alert.type === "success" && alert.message.length > 0) {
-            navigate("/", {
-                replace: true,
-                state: alert
+    // @ts-ignore
+    const redirectPath = location.state?.path || "/";
+
+    const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        const headers: Headers = new Headers();
+        headers.set("Content-Type", "application/json");
+        const {response, data} = await api("/auth/login", {
+            method: "POST",
+            body: JSON.stringify({email: emailValue, password: passwordValue}),
+            headers
+        });
+        if (response.status === 200) {
+            authSet({
+                isAuthenticated: true,
+                accessToken: data.accessToken,
+                refreshToken: data.refreshToken,
+            });
+        } else {
+            authSet({
+                isAuthenticated: false,
+                accessToken: null,
+                refreshToken: null,
             });
         }
-    }, [alert]);
-
-    const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        loginUser({
-            email: emailValue,
-            password: passwordValue
-        }).then((response) => response.json().then(res => ({status: response.status, ...res})))
-            .then((apiResponse) => {
-                if (apiResponse.status === 200) {
-                    authSet({
-                        isAuthenticated: true,
-                        accessToken: apiResponse.accessToken,
-                        refreshToken: apiResponse.refreshToken,
-                    });
-                } else {
-                    authSet({
-                        isAuthenticated: false,
-                        accessToken: null,
-                        refreshToken: null,
-                    });
-                }
-            }).catch((error) => {
-            console.error('Error:', error);
-        });
-        // alertSet({message: "Sorry something happened on our end.", type: "success"});
         emailReset();
         passwordReset();
+        navigate(redirectPath, {replace: true});
     }
 
 
     return (
         <>
-            {alert.message !== "" && <Alert message={alert.message} type={alert.type} onClose={() => {
-                alertSet({message: "", type: "success"});
-            }}/>}
             <Header/>
             <div className={`grid ${formStyles["grid--site-form"]} ${formStyles["site-form"]}`}>
                 <h1 className={`${formStyles["site-form__title"]}`}>Login</h1>

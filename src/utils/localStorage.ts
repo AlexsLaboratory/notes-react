@@ -2,12 +2,12 @@ function setLocalStorage<T>(key: string, value: T) {
     window.localStorage.setItem(key, JSON.stringify(value));
 }
 
-function getLocalStorage<T>(key: string, initialValue: T) {
+function getLocalStorage<T>(key: string, defaultValue: T) {
     try {
         const value = window.localStorage.getItem(key);
-        return value ? JSON.parse(value) : initialValue;
+        return value ? JSON.parse(value) : defaultValue;
     } catch (e) {
-        return String(initialValue);
+        return String(defaultValue);
     }
 }
 
