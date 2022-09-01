@@ -6,6 +6,8 @@ import {useAuth, useAuthSet} from "../context/AuthContext";
 import {useAlert, useAlertSet} from "../context/AlertContext";
 import Alert from "./Alert";
 import {useLocation} from "react-router";
+import Logo from "./Logo";
+import {Link} from "react-router-dom";
 
 interface OwnProps {
 }
@@ -44,6 +46,9 @@ const Header: FunctionComponent<Props> = (props) => {
                                     styleType="secondary"
                                     className={headerStyles["button--nav"]}/>
                     </div>
+                    <Link to="/">
+                        <Logo className={headerStyles.nav__logo}/>
+                    </Link>
                     <div className={headerStyles.nav__right}>
                         {
                             !auth.isAuthenticated ? (
