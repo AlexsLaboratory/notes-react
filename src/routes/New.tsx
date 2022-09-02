@@ -9,6 +9,7 @@ import Alert from "../components/Alert";
 import {useNavigate} from "react-router-dom";
 import {useAlert, useAlertSet} from "../context/AlertContext";
 import {createUser} from "../services/User";
+import useFetch from "../hooks/useFetch";
 
 interface OwnProps {
 }
@@ -16,6 +17,7 @@ interface OwnProps {
 type Props = OwnProps;
 
 const New: FunctionComponent<Props> = (props) => {
+    const api = useFetch();
     const {
         value: titleValue,
         isValid: titleValid,
@@ -46,10 +48,17 @@ const New: FunctionComponent<Props> = (props) => {
         return [true, ""]
     }, {onEmpty: "Body is required", onInvalid: ""});
 
-    const onSubmitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+    const onSubmitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        const headers: Headers = new Headers();
+        headers.set("Content-Type", "application/json");
+        const {response, data} = await api("/note/create", {
+            method: "POST",
+            body: JSON.stringify({title: titleValue, body: bodyValue}),
+            headers
+        })
         titleReset();
-        bodyReset()
+        bodyReset();
     }
 
     const formValid = !titleValid || !bodyValid;

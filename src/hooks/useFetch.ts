@@ -11,7 +11,6 @@ const useFetch = () => {
         url = `${baseURL}${url}`
         let response = await fetch(url, config)
         let data = await response.json()
-        console.log('REQUESTING:', data)
         return {response, data}
     }
 
@@ -24,27 +23,25 @@ const useFetch = () => {
             body: JSON.stringify({'refreshToken': authTokens.refreshToken})
         })
         let data = await response.json() as UserState;
-        data.isAuthenticated = true;
-        return data;
+        return {response, data};
     }
 
     const callFetch = async (url: string, config: FetchConfig) => {
         config.headers.set('Authorization', `Bearer ${auth?.accessToken}`);
-
-        console.log('Before Request')
         let {response, data} = await originalRequest(url, config)
-        console.log('After Request')
-
         if (response.status === 401) {
-            const refreshResponse = await refreshToken(auth)
-            setAuth({...refreshResponse, isAuthenticated: true})
+            const {response: refreshResponse, data: refreshData} = await refreshToken(auth);
+            if (refreshResponse.status === 200) {
+                setAuth({...refreshResponse, isAuthenticated: true})
 
-            config.headers.set('Authorization', `Bearer ${auth?.accessToken}`)
+                config.headers.set('Authorization', `Bearer ${refreshData?.accessToken}`)
 
-            let newResponse = await originalRequest(url, config)
-            response = newResponse.response
-            data = newResponse.data
-
+                let newResponse = await originalRequest(url, config)
+                response = newResponse.response
+                data = newResponse.data
+            } else {
+                setAuth({accessToken: null, refreshToken: null, isAuthenticated: false})
+            }
         }
 
         return {response, data}
