@@ -39,7 +39,7 @@ const useFetch = () => {
                 let newResponse = await originalRequest(url, config)
                 response = newResponse.response
                 data = newResponse.data
-            } else {
+            } else if (refreshResponse.status === 401) {
                 setAuth({accessToken: null, refreshToken: null, isAuthenticated: false})
             }
         }
