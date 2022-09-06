@@ -32,7 +32,7 @@ const useFetch = () => {
         if (response.status === 401) {
             const {response: refreshResponse, data: refreshData} = await refreshToken(auth);
             if (refreshResponse.status === 200) {
-                setAuth({...refreshResponse, isAuthenticated: true})
+                setAuth({...refreshData, isAuthenticated: true})
 
                 config.headers.set('Authorization', `Bearer ${refreshData?.accessToken}`)
 
