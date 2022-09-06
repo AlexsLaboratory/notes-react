@@ -6,6 +6,7 @@ interface OwnProps {
     styleType: string;
     className?: string;
     disabled?: undefined | boolean;
+    onClick?: undefined | ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void);
     children: React.ReactNode;
 }
 
@@ -42,7 +43,7 @@ const Button: FunctionComponent<Props> = (props) => {
 
   return (
       <>
-        <button type={props.type} className={`${styles.button} ${styles[buttonStyle]} ${props.className}`} disabled={props.disabled}>{props.children}</button>
+        <button type={props.type} onClick={props.onClick} className={`${styles.button} ${styles[buttonStyle]} ${props.className}`} disabled={props.disabled}>{props.children}</button>
       </>
   );
 };

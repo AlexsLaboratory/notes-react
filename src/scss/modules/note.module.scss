@@ -1,0 +1,62 @@
+@use "../utilities/variables";
+.grid--note {
+  display: grid;
+  grid-template-areas:
+          "title title title"
+          "body body body"
+          "timestamp timestamp timestamp"
+          "separator separator separator"
+          "view edit delete";
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: min-content 1fr repeat(3, min-content);
+  background-color: variables.$light-gray-color;
+  height: 11rem;
+  padding: .5rem;
+
+  &__title {
+    grid-area: title;
+    justify-self: center;
+    margin: 0 .25rem;
+  }
+
+  &__body {
+    overflow: hidden;
+    grid-area: body;
+    margin: 0;
+  }
+
+  &__timestamp {
+    grid-area: timestamp;
+    color: #616868;
+
+    &__label {
+      font-weight: bold;
+    }
+
+    &__time {
+      display: inline;
+    }
+  }
+
+  &__view {
+    grid-area: view;
+  }
+
+  &__separator {
+    width: 100%;
+    grid-area: separator;
+    height: .15rem;
+    border-width: 0;
+    background-color: darken(variables.$light-gray-color, 15);
+  }
+
+  &__edit {
+    grid-area: edit;
+    margin-left: .5rem;
+  }
+
+  &__delete {
+    grid-area: delete;
+    margin-left: .5rem;
+  }
+}
