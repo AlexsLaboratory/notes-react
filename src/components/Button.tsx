@@ -26,6 +26,15 @@ const Button: FunctionComponent<Props> = (props) => {
         case 'outline-secondary':
             buttonStyle = 'button--outline-secondary';
             break;
+        case 'delete':
+            buttonStyle = 'button--delete';
+            break;
+        case 'view':
+            buttonStyle = 'button--view';
+            break;
+        case 'edit':
+            buttonStyle = 'button--edit';
+            break;
         default:
             buttonStyle = 'button--primary';
             break;
