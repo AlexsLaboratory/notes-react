@@ -6,6 +6,7 @@ interface OwnProps {
     styleType: string;
     className?: string;
     disabled?: undefined | boolean;
+    onClick?: undefined | ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void);
     children: React.ReactNode;
 }
 
@@ -26,6 +27,15 @@ const Button: FunctionComponent<Props> = (props) => {
         case 'outline-secondary':
             buttonStyle = 'button--outline-secondary';
             break;
+        case 'delete':
+            buttonStyle = 'button--delete';
+            break;
+        case 'view':
+            buttonStyle = 'button--view';
+            break;
+        case 'edit':
+            buttonStyle = 'button--edit';
+            break;
         default:
             buttonStyle = 'button--primary';
             break;
@@ -33,7 +43,7 @@ const Button: FunctionComponent<Props> = (props) => {
 
   return (
       <>
-        <button type={props.type} className={`${styles.button} ${styles[buttonStyle]} ${props.className}`} disabled={props.disabled}>{props.children}</button>
+        <button type={props.type} onClick={props.onClick} className={`${styles.button} ${styles[buttonStyle]} ${props.className}`} disabled={props.disabled}>{props.children}</button>
       </>
   );
 };

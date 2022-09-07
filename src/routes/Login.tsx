@@ -69,16 +69,15 @@ const Login: FunctionComponent<Props> = (props) => {
         e.preventDefault();
         const headers: Headers = new Headers();
         headers.set("Content-Type", "application/json");
-        const {response, data} = await api("/auth/login", {
+        const {response: loginResponse, data: loginData} = await api("/auth/login", {
             method: "POST",
             body: JSON.stringify({email: emailValue, password: passwordValue}),
             headers
         });
-        if (response.status === 200) {
+        if (loginResponse.status === 200) {
             authSet({
                 isAuthenticated: true,
-                accessToken: data.accessToken,
-                refreshToken: data.refreshToken,
+                ...loginData
             });
         } else {
             authSet({
