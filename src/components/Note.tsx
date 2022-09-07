@@ -7,7 +7,7 @@ interface OwnProps {
     title: string;
     body: string;
     timestamp: string;
-    id: string;
+    id: string | number;
 }
 
 type Props = OwnProps;

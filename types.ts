@@ -41,3 +41,19 @@ export interface UserState {
     refreshToken: string | null;
     isAuthenticated: boolean;
 }
+
+export interface Page {
+    prev?: number | null;
+    next: number | null;
+    direction: string;
+    data: Note[];
+}
+
+export interface Note {
+    id: number;
+    title: string;
+    body: string;
+    userID: number;
+    createdAt: string;
+    updatedAt: string;
+}
