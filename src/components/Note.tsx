@@ -1,4 +1,4 @@
-import React, {FunctionComponent} from 'react';
+import React, {forwardRef, FunctionComponent, LegacyRef, RefCallback, RefObject} from 'react';
 import noteStyles from "../scss/modules/note.module.scss";
 import ButtonLink from "./ButtonLink";
 import Button from "./Button";
@@ -12,11 +12,10 @@ interface OwnProps {
 
 type Props = OwnProps;
 
-const Note: FunctionComponent<Props> = (props) => {
-
+const Note = forwardRef<RefObject<any>, Props>((props, ref: LegacyRef<any>) => {
     return (
         <>
-            <div className={`${noteStyles['grid--note']}`} data-id={props.id}>
+            <div className={`${noteStyles['grid--note']}`} data-id={props.id} ref={ref}>
                 <h3 className={`${noteStyles['grid--note__title']}`}>{props.title}</h3>
                 <p className={`${noteStyles['grid--note__body']}`}>
                     {props.body}
@@ -37,6 +36,6 @@ const Note: FunctionComponent<Props> = (props) => {
             </div>
         </>
     );
-};
+});
 
 export default Note;

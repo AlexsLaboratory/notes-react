@@ -1,5 +1,5 @@
 import Header from "../components/Header";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useRef, useState} from "react";
 import homeStyles from "../scss/modules/home.module.scss";
 import headerStyles from "../scss/modules/header.module.scss";
 import ButtonLink from "../components/ButtonLink";
@@ -12,29 +12,43 @@ import {Note as NoteData, Page} from "../../types";
 function App() {
     const api = useFetch();
     const headers = new Headers();
-    const [notes, setNotes] = useState({} as Page);
+    const [notes, setNotes] = useState([] as NoteData[]);
     const [isLoading, setIsLoading] = useState(true);
+    const [next, setNext] = useState<number | null>(null);
+    const [limit, setLimit] = useState(5);
+    const [cursor, setCursor] = useState<number | null>(null);
+
+    const observer = useRef<any>(null);
+    const lastNoteElementRef = useCallback((node: any) => {
+        if (isLoading) return;
+        if (observer.current) observer.current.disconnect();
+        observer.current = new IntersectionObserver((entries: any) => {
+            if (entries[0].isIntersecting && next !== null) {
+                setCursor(next);
+            }
+        })
+        if (node) observer.current.observe(node);
+    }, [isLoading, next]);
     headers.set("Content-Type", "application/json");
 
-    async function getData() {
-        const {response, data} = await api("/note/get-all?limit=5", {
+    async function getData(limit: number, cursor: number | null) {
+        const {response, data} = await api(`/note/get-all?limit=${limit}&cursor=${cursor}`, {
             method: "GET",
             headers
         });
-        return data;
+        return data as Page;
     }
 
     useEffect(() => {
-        getData().then((data) => {
-            setNotes(data);
-        })
-    }, [])
-
-    useEffect(() => {
-        if (Object.keys(notes).length !== 0) {
+        setIsLoading(true);
+        getData(limit, cursor).then((page) => {
+            setNotes((prevNotes) => {
+                return [...prevNotes, ...page.data]
+            });
+            setNext(page.next);
             setIsLoading(false);
-        }
-    }, [notes])
+        })
+    }, [limit, cursor])
 
     return (
         <>
@@ -42,9 +56,20 @@ function App() {
             <div className={`${homeStyles.grid} ${homeStyles['grid--content']} ${homeStyles.content}`}>
                 <h1 className={`${homeStyles['content__title']}`}>My Notes</h1>
                 <div className={`${homeStyles['grid']} ${homeStyles['content__items']} ${homeStyles['grid--items']}`}>
-                    {isLoading ? <p>Loading...</p> : notes.data.map((note: NoteData) => (
-                        <Note key={note.id} title={note.title} body={note.body} id={note.id} timestamp={timeSince(note.createdAt)}/>
-                    ))}
+                    {notes.map((note: NoteData, index) => {
+                        if (notes.length === index + 1) return <Note key={note.id}
+                                                                     ref={lastNoteElementRef}
+                                                                     id={note.id}
+                                                                     title={note.title}
+                                                                     body={note.body}
+                                                                     timestamp={timeSince(note.createdAt)}></Note>;
+                        return <Note key={note.id}
+                                     title={note.title}
+                                     body={note.body}
+                                     id={note.id}
+                                     timestamp={timeSince(note.createdAt)}/>
+                    })}
+                    {isLoading && <p>Loading...</p>}
                 </div>
             </div>
         </>
