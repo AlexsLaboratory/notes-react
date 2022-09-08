@@ -8,9 +8,11 @@ import Note from "../components/Note";
 import {timeSince} from "../utils/time";
 import useFetch from "../hooks/useFetch";
 import {Note as NoteData, Page} from "../../types";
+import {useAuth} from "../context/AuthContext";
 
 function App() {
     const api = useFetch();
+    const auth = useAuth();
     const headers = new Headers();
     const [notes, setNotes] = useState([] as NoteData[]);
     const [isLoading, setIsLoading] = useState(true);
@@ -40,6 +42,12 @@ function App() {
     }
 
     useEffect(() => {
+        if (auth.isAuthenticated) return;
+        setNotes([]);
+    }, [auth]);
+
+    useEffect(() => {
+        if (!auth.isAuthenticated) return;
         setIsLoading(true);
         getData(limit, cursor).then((page) => {
             setNotes((prevNotes) => {
@@ -48,7 +56,7 @@ function App() {
             setNext(page.next);
             setIsLoading(false);
         })
-    }, [limit, cursor])
+    }, [limit, cursor, auth]);
 
     return (
         <>
@@ -69,7 +77,8 @@ function App() {
                                      id={note.id}
                                      timestamp={timeSince(note.createdAt)}/>
                     })}
-                    {isLoading && <p>Loading...</p>}
+                    {isLoading && auth.isAuthenticated && <p>Loading...</p>}
+                    {!auth.isAuthenticated && <p>You need to login to see your notes</p>}
                 </div>
             </div>
         </>
