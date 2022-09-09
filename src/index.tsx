@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
+import '../public/favicon.ico';
+import '../public/manifest.json';
 import {
     BrowserRouter,
     Route, Routes
