@@ -1,39 +1,38 @@
-import React, {createContext, FunctionComponent, ReactNode, useContext, useState} from 'react';
+import React, {
+  createContext, ReactNode, useContext, useState,
+} from "react";
 import AlertProps from "../interfaces/AlertProps";
 
 const defaultValue = {
-    message: "",
-    type: "success"
-}
+  message: "",
+  type: "success",
+};
 
 const AlertContext = createContext<AlertProps>(defaultValue as AlertProps);
 
-const useAlertSet = () => {
-    return useContext(AlertSetContext);
-}
-
+// @ts-ignore
 const AlertSetContext = createContext<Function>(useAlertSet);
 
+const useAlertSet = () => useContext(AlertSetContext);
+
 interface OwnProps {
-    children: ReactNode;
+  children: ReactNode;
 }
 
 type Props = OwnProps;
 
-const useAlert = () => {
-    return useContext(AlertContext);
+const useAlert = () => useContext(AlertContext);
+
+function AlertProvider(props: Props) {
+  const [alert, setAlert] = useState<AlertProps>(defaultValue as AlertProps);
+
+  return (
+    <AlertContext.Provider value={alert}>
+      <AlertSetContext.Provider value={setAlert}>
+        {props.children}
+      </AlertSetContext.Provider>
+    </AlertContext.Provider>
+  );
 }
 
-const AlertProvider: FunctionComponent<Props> = (props) => {
-    const [alert, setAlert] = useState<AlertProps>(defaultValue as AlertProps);
-
-    return (
-        <AlertContext.Provider value={alert}>
-            <AlertSetContext.Provider value={setAlert}>
-                {props.children}
-            </AlertSetContext.Provider>
-        </AlertContext.Provider>
-    );
-};
-
-export {AlertProvider, useAlert, useAlertSet};
+export { AlertProvider, useAlert, useAlertSet };
