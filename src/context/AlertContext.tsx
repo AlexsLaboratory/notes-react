@@ -10,10 +10,11 @@ const defaultValue = {
 
 const AlertContext = createContext<AlertProps>(defaultValue as AlertProps);
 
-// @ts-ignore
 const AlertSetContext = createContext<Function>(useAlertSet);
 
-const useAlertSet = () => useContext(AlertSetContext);
+function useAlertSet() {
+  return useContext(AlertSetContext);
+}
 
 interface OwnProps {
   children: ReactNode;
