@@ -1,6 +1,8 @@
 import React, {
   useCallback, useEffect, useRef, useState,
 } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import Header from "../components/Header";
 import homeStyles from "../scss/modules/home.module.scss";
 import Note from "../components/Note";
@@ -16,6 +18,7 @@ function App() {
   const [notes, setNotes] = useState([] as NoteData[]);
   const [isLoading, setIsLoading] = useState(true);
   const [next, setNext] = useState<number | null>(null);
+  const [error, setError] = useState(false);
   const [limit] = useState(5);
   const [cursor, setCursor] = useState<number | null>(null);
 
@@ -55,6 +58,12 @@ function App() {
         setNotes((prevNotes) => [...prevNotes, ...page.data]);
         setNext(page.next);
         setIsLoading(false);
+        setError(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+        setError(true);
+        setNotes([]);
       });
   }, [limit, cursor, auth]);
 
@@ -87,8 +96,14 @@ function App() {
               />
             );
           })}
-          {isLoading && auth.isAuthenticated && <p>Loading...</p>}
-          {!auth.isAuthenticated && <p>You need to login to see your notes</p>}
+          {isLoading && auth.isAuthenticated && (
+            <FontAwesomeIcon
+              icon={faSpinner}
+              className={`fa-spin-pulse fa-3x ${homeStyles.content__items__message}`}
+            />
+          )}
+          {!auth.isAuthenticated && <p className={`${homeStyles.content__items__message}`}>You need to login to see your notes</p>}
+          {error && <p className={`${homeStyles.content__items__message}`}>Something went wrong</p>}
         </div>
       </div>
     </>
