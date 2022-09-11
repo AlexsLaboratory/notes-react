@@ -19,7 +19,7 @@ module.exports = {
     // `path` is the folder where Webpack will place your bundles
     path: path.join(__dirname, "build"),
     // `publicPath` is where Webpack will load your bundles from (optional)
-    // publicPath: path.join(__dirname, 'build'),
+    publicPath: "/",
   },
   target: "web",
   devServer: {
@@ -27,6 +27,7 @@ module.exports = {
     static: {
       directory: path.join(__dirname, "public"),
     },
+    historyApiFallback: true,
     hot: true,
     liveReload: true,
     compress: true,
