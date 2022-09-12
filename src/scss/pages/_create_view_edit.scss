@@ -29,6 +29,11 @@
       background-color: rgba(red(variables.$light-gray-color), green(variables.$light-gray-color), blue(variables.$light-gray-color), .5);
     }
 
+    &__message {
+      margin-top: .5rem;
+      justify-self: center;
+    }
+
     &--create-edit {
       .form {
         background-color: rgba(red(variables.$light-gray-color), green(variables.$light-gray-color), blue(variables.$light-gray-color), .5);

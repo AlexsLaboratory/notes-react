@@ -26,7 +26,7 @@ const Note = forwardRef<RefObject<any>, Props>((props, ref: LegacyRef<any>) => (
     </div>
     <hr className={`${noteStyles["grid--note__separator"]}`} />
     <ButtonLink
-      href="/view"
+      href={`/notes/${props.id}/view`}
       label="View"
       styleType="view"
     />
