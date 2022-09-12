@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "noEmit": false,
+    "noEmit": true,
     "target": "ES2020",
   },
   "include": [

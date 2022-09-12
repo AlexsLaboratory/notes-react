@@ -52,9 +52,14 @@ module.exports = {
           name: "[name].[ext]",
         },
       },
+      // {
+      //   test: /\.tsx?$/,
+      //   use: "ts-loader",
+      //   exclude: path.join(__dirname, "node_modules"),
+      // },
       {
         test: /\.tsx?$/,
-        use: "ts-loader",
+        use: "babel-loader",
         exclude: path.join(__dirname, "node_modules"),
       },
       {
