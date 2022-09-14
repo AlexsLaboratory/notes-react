@@ -15,6 +15,7 @@ import { AuthProvider } from "./context/AuthContext";
 import New from "./routes/New";
 import RequireAuth from "./components/RequireAuth";
 import View from "./routes/View";
+import Edit from "./routes/Edit";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -37,6 +38,12 @@ root.render(
             path="/notes/:id/view"
             element={
               <RequireAuth message="Login is required before viewing the note."><View /></RequireAuth>
+                        }
+          />
+          <Route
+            path="/notes/:id/edit"
+            element={
+              <RequireAuth message="Login is required before editing the note."><Edit /></RequireAuth>
                         }
           />
           <Route path="*" element={<h1>404</h1>} />
