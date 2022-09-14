@@ -11,7 +11,12 @@ const useFetch = () => {
     // eslint-disable-next-line no-param-reassign
     url = `${baseURL}${url}`;
     const response = await fetch(url, config);
-    const data = await response.json();
+    let data = null;
+    try {
+      data = await response.json();
+    } catch (e) {
+      data = null;
+    }
     return { response, data };
   };
 
