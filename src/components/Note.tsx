@@ -31,7 +31,7 @@ const Note = forwardRef<RefObject<any>, Props>((props, ref: LegacyRef<any>) => (
       styleType="view"
     />
     <ButtonLink
-      href="/edit"
+      href={`/notes/${props.id}/edit`}
       label="Edit"
       styleType="edit"
       className={`${noteStyles["grid--note__edit"]}`}

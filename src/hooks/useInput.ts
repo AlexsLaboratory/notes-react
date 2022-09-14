@@ -27,6 +27,7 @@ export const useInput = (validateValue: Function, errorMessage: ErrorMessage) =>
 
   return {
     value: enteredValue,
+    setValue: setEnteredValue,
     isValid: valueIsValid,
     errorMessage: message,
     hasError,
