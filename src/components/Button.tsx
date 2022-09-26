@@ -1,4 +1,4 @@
-import React, { FunctionComponent } from "react";
+import React from "react";
 import styles from "../scss/modules/button.module.scss";
 
 interface OwnProps {
@@ -6,7 +6,7 @@ interface OwnProps {
   styleType: string;
   className?: string;
   disabled?: undefined | boolean;
-  onClick?: undefined | ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void);
+  onClick?: any;
   children: React.ReactNode;
 }
 

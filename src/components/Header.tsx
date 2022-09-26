@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect } from "react";
+import React, { FunctionComponent, useEffect, useRef } from "react";
 import { useLocation } from "react-router";
 import { Link } from "react-router-dom";
 import ButtonLink from "./ButtonLink";
@@ -37,16 +37,6 @@ const Header: FunctionComponent<Props> = (props) => {
         }}
       />
       )}
-      <dialog className={`grid ${modalStyles["grid--modal"]} ${modalStyles.modal}`} id="delete-modal">
-        <h2 className={`${modalStyles.modal__title}`}>
-          Are you sure you want to delete this note? This action
-          cannot be
-          undone.
-        </h2>
-        <button type="button" className="button button--primary button--delete modal__action">
-          Yes, Delete
-        </button>
-      </dialog>
       <header>
         <nav className={headerStyles.nav}>
           <div className={headerStyles.nav__left}>

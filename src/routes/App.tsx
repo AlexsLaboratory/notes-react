@@ -10,6 +10,8 @@ import { timeSince } from "../utils/time";
 import useFetch from "../hooks/useFetch";
 import { Note as NoteData, Page } from "../../types";
 import { useAuth } from "../context/AuthContext";
+import modalStyles from "../scss/modules/modal.module.scss";
+import DeleteDialog from "../components/DeleteDialog";
 
 function App() {
   const api = useFetch();
@@ -67,6 +69,11 @@ function App() {
       });
   }, [limit, cursor, auth]);
 
+  const onDelete = (id: string | number) => {
+    const newNotes = notes.filter((item) => item.id !== id);
+    setNotes(newNotes);
+  };
+
   return (
     <>
       <Header />
@@ -83,6 +90,9 @@ function App() {
                   title={note.title}
                   body={note.body}
                   timestamp={timeSince(note.createdAt)}
+                  onDelete={() => {
+                    onDelete(note.id);
+                  }}
                 />
               );
             }
@@ -93,6 +103,9 @@ function App() {
                 body={note.body}
                 id={note.id}
                 timestamp={timeSince(note.createdAt)}
+                onDelete={() => {
+                  onDelete(note.id);
+                }}
               />
             );
           })}
@@ -102,8 +115,19 @@ function App() {
               className={`fa-spin-pulse fa-3x ${homeStyles.content__items__message}`}
             />
           )}
-          {!auth.isAuthenticated && <p className={`${homeStyles.content__items__message}`}>You need to login to see your notes</p>}
-          {error && <p className={`${homeStyles.content__items__message}`}>Something went wrong</p>}
+          {!auth.isAuthenticated
+                        && (
+                        <p className={`${homeStyles.content__items__message}`}>
+                          You need to login to
+                          see your notes
+                        </p>
+                        )}
+          {error && (
+          <p className={`${homeStyles.content__items__message}`}>
+            Something went
+            wrong
+          </p>
+          )}
         </div>
       </div>
     </>
