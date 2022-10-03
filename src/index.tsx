@@ -1,4 +1,4 @@
-import React from "react";
+import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import "../public/favicon.ico";
 import "../public/manifest.json";
@@ -6,16 +6,19 @@ import {
   BrowserRouter,
   Route, Routes,
 } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 import App from "./routes/App";
-import Signup from "./routes/Signup";
 import "./scss/global/index.scss";
-import Login from "./routes/Login";
 import { AlertProvider } from "./context/AlertContext";
 import { AuthProvider } from "./context/AuthContext";
-import New from "./routes/New";
-import RequireAuth from "./components/RequireAuth";
-import View from "./routes/View";
-import Edit from "./routes/Edit";
+
+const Login = lazy(() => import("./routes/Login"));
+const New = lazy(() => import("./routes/New"));
+const RequireAuth = lazy(() => import("./components/RequireAuth"));
+const View = lazy(() => import("./routes/View"));
+const Edit = lazy(() => import("./routes/Edit"));
+const Signup = lazy(() => import("./routes/Signup"));
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement,
@@ -25,26 +28,95 @@ root.render(
     <AlertProvider>
       <AuthProvider>
         <Routes>
-          <Route path="/" element={<App />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/login" element={<Login />} />
+          <Route
+            path="/"
+            element={(
+              <Suspense fallback={(
+                <FontAwesomeIcon
+                  icon={faSpinner}
+                  className="fa-spin-pulse fa-3x"
+                />
+)}
+              >
+                <App />
+              </Suspense>
+          )}
+          />
+          <Route
+            path="/signup"
+            element={(
+              <Suspense fallback={(
+                <FontAwesomeIcon
+                  icon={faSpinner}
+                  className="fa-spin-pulse fa-3x"
+                />
+)}
+              >
+                <Signup />
+              </Suspense>
+            )}
+          />
+          <Route
+            path="/login"
+            element={(
+              <Suspense fallback={(
+                <FontAwesomeIcon
+                  icon={faSpinner}
+                  className="fa-spin-pulse fa-3x"
+                />
+)}
+              >
+                <Login />
+              </Suspense>
+            )}
+          />
           <Route
             path="/new"
-            element={
-              <RequireAuth message="Login is required before creating a new note."><New /></RequireAuth>
-                        }
+            element={(
+              <RequireAuth message="Login is required before creating a new note.">
+                <Suspense fallback={(
+                  <FontAwesomeIcon
+                    icon={faSpinner}
+                    className="fa-spin-pulse fa-3x"
+                  />
+)}
+                >
+                  <New />
+                </Suspense>
+              </RequireAuth>
+            )}
           />
           <Route
             path="/notes/:id/view"
-            element={
-              <RequireAuth message="Login is required before viewing the note."><View /></RequireAuth>
-                        }
+            element={(
+              <RequireAuth message="Login is required before viewing the note.">
+                <Suspense fallback={(
+                  <FontAwesomeIcon
+                    icon={faSpinner}
+                    className="fa-spin-pulse fa-3x"
+                  />
+)}
+                >
+                  <View />
+                </Suspense>
+              </RequireAuth>
+            )}
           />
           <Route
             path="/notes/:id/edit"
-            element={
-              <RequireAuth message="Login is required before editing the note."><Edit /></RequireAuth>
-                        }
+            element={(
+              <RequireAuth message="Login is required before editing the note.">
+                <Suspense fallback={(
+                  <FontAwesomeIcon
+                    icon={faSpinner}
+                    className="fa-spin-pulse fa-3x"
+                  />
+)}
+                >
+                  <Edit />
+                </Suspense>
+              </RequireAuth>
+            )}
           />
           <Route path="*" element={<h1>404</h1>} />
         </Routes>
