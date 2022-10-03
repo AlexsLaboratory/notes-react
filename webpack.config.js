@@ -20,6 +20,7 @@ module.exports = {
     path: path.join(__dirname, "build"),
     // `publicPath` is where Webpack will load your bundles from (optional)
     publicPath: "/",
+    clean: true
   },
   target: "web",
   devServer: {
@@ -52,11 +53,6 @@ module.exports = {
           name: "[name].[ext]",
         },
       },
-      // {
-      //   test: /\.tsx?$/,
-      //   use: "ts-loader",
-      //   exclude: path.join(__dirname, "node_modules"),
-      // },
       {
         test: /\.tsx?$/,
         use: "babel-loader",
@@ -105,13 +101,10 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
-      chunks: "async",
+      chunks: "all",
       minSize: 20000,
       minRemainingSize: 0,
       minChunks: 1,
-      maxAsyncRequests: 30,
-      maxInitialRequests: 30,
-      enforceSizeThreshold: 50000,
       cacheGroups: {
         defaultVendors: {
           test: /[\\/]node_modules[\\/]/,
